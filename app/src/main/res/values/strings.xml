@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AlefTestApp</string>
+    <string name="image">Image</string>
 </resources>
