@@ -1,14 +1,14 @@
 package com.myapp.aleftestapp.presentation
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import com.myapp.aleftestapp.domain.repository.ImageRepository
+import com.myapp.aleftestapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 private const val TAG = "viewModel"
@@ -21,19 +21,25 @@ class ImageViewModel @Inject constructor(
     var images = MutableLiveData<List<String>>()
     private set
 
+    var eventFlow = MutableSharedFlow<String>()
+        private set
+
     init {
         loadImages()
     }
 
     fun loadImages() {
         viewModelScope.launch {
-            try {
-                val res = repository.getImages()
-                images.postValue(res)
-            } catch (e: HttpException) {
-                Log.d(TAG, "loadImages: ${e.localizedMessage}")
-            } catch (e: IOException) {
-                Log.d(TAG, "loadImages: ${e.localizedMessage}")
+            val res = repository.getImages()
+            when (res) {
+                is Resource.Success -> {
+                    res.data?.let {
+                        images.postValue(it)
+                    }
+                }
+                is Resource.Error -> {
+                    res.message?.let { eventFlow.emit(it) }
+                }
             }
         }
     }

@@ -41,7 +41,6 @@ private class ErrorListener(
     ): Boolean {
         binding.errorText.text = e?.localizedMessage
         binding.errorText.visibility = View.VISIBLE
-        Log.d("error", "onLoadFailed: ${e?.localizedMessage}")
         return false
     }
 

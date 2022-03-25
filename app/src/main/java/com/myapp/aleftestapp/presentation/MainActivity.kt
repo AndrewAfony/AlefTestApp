@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.myapp.aleftestapp.adapters.ImageAdapter
 import com.myapp.aleftestapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -31,6 +34,15 @@ class MainActivity : AppCompatActivity() {
         binding.swipeToRefreshLayout.setOnRefreshListener {
             viewModel.loadImages()
             binding.swipeToRefreshLayout.isRefreshing = false
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleScope.launchWhenCreated {
+            viewModel.eventFlow.collectLatest {
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
