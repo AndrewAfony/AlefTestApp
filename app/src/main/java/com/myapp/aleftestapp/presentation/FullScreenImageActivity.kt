@@ -3,6 +3,7 @@ package com.myapp.aleftestapp.presentation
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -40,6 +41,7 @@ private class ErrorListener(
     ): Boolean {
         binding.errorText.text = e?.localizedMessage
         binding.errorText.visibility = View.VISIBLE
+        Log.d("error", "onLoadFailed: ${e?.localizedMessage}")
         return false
     }
 

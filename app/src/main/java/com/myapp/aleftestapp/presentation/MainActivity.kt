@@ -20,6 +20,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        setupRecyclerView(emptyList())
 
         viewModel.images.observe(this){
             setupRecyclerView(it)
@@ -29,8 +32,6 @@ class MainActivity : AppCompatActivity() {
             viewModel.loadImages()
             binding.swipeToRefreshLayout.isRefreshing = false
         }
-
-        setContentView(binding.root)
     }
 
     private fun setupRecyclerView(data: List<String>) {
